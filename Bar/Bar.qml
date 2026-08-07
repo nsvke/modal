@@ -22,9 +22,15 @@ PanelWindow {
     property bool barFocused: true
     property int focusedIndex: -1
 
+    property bool healthyEyes: eyeShieldWidget.healthyEyes
+    function toggleEyeShild() {
+        eyeShieldWidget.toggleAction();
+    }
+    
     property var focusableWidgets: [
         tempWidget,
         caffeineWidget,
+        eyeShieldWidget,
         // workspacesWidget,
         btWidget,
         netWidget,
@@ -156,6 +162,11 @@ PanelWindow {
                 Widgets.Wrapper {
                     isFocused: caffeineWidget.isFocused
                     Widgets.Caffeine { id: caffeineWidget }
+                }
+
+                Widgets.Wrapper {
+                    isFocused: eyeShieldWidget.isFocused
+                    Widgets.EyeShield { id: eyeShieldWidget }
                 }
 
                 Widgets.Wrapper {

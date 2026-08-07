@@ -4,6 +4,7 @@ import Quickshell.Io
 import "Bar" as BarModule
 import "PowerDialog" as PDModule
 import "./Widgets/Style.qml" as Style
+import "EyeShield" as ESModule
 
 ShellRoot {
     id: root
@@ -42,6 +43,10 @@ ShellRoot {
         function closePowerDialog() {
             pd.visible = false;
         }
+
+        function toggleEyeShield() {
+            bar.toggleEyeShild();
+        }
     }
 
     BarModule.Bar {
@@ -53,6 +58,10 @@ ShellRoot {
         id: pd
     }
 
+    ESModule.EyeShield {
+        id: es
+        healthyEyes: bar.healthyEyes
+    }
 
     Timer {
         id: welcomeTimer
@@ -61,14 +70,15 @@ ShellRoot {
         repeat: false
         onTriggered: {
             bar.barFocused = false;
-            pd.closeWithAnimation();
+            // pd.closeWithAnimation();
+            // es.closeWithAnimation();
         }
-        
     }
 
     Component.onCompleted: {
         bar.barFocused = true;
-        pd.visible = true;
+        // pd.visible = true;
+        // es.visible = true;
 
         welcomeTimer.start();
     }

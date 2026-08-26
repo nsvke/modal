@@ -10,7 +10,12 @@ Item {
 
     property bool isFocused: false
     property BluetoothAdapter adapter: Bluetooth.defaultAdapter
-    property bool isPowered: adapter ? adapter.enabled : false
+    property int adapterState: adapter ? adapter.state : BluetoothAdapterState.Disabled
+    
+    readonly property bool isPowered: adapterState === BluetoothAdapterState.Enabled
+    readonly property bool isBlocked: adapterState === BluetoothAdapterState.Blocked
+    readonly property bool isTransitioning: adapterState === BluetoothAdapterState.Enabling
+                                           || adapterState === BluetoothAdapterState.Disabling
     property int connectedCount: Bluetooth.devices ? Bluetooth.devices.values.length : 0
     property color currentColor: root.isFocused ? Style.focusFg : (Style.textMain)
 
@@ -25,24 +30,33 @@ Item {
     property string statusText: {
         if (!adapter)
             return "none";
-        if (!isPowered)
-            return "";
+        if (root.isBlocked)
+            return "off-blocked";
+        if (root.isTransitioning)
+            return "...";
+        if (!root.isPowered)
+            return "off";
         for (let i = 0; i < connectedCount; i++) {
             let dev = Bluetooth.devices.values[i];
             if (dev && dev.connected) {
                 return dev.name !== "" ? dev.name : dev.deviceName;
             }
         }
-
-        return "";
+        return "disconnected";
     }
-
+        
     Row {
         id: layout
         spacing: 6
 
         Button {
-            icon.source: root.isPowered ? "../icons/bton.svg" : "../icons/btoff.svg"
+            icon.source: {
+                if (root.isBlocked || !root.isPowered)
+                    return "../icons/btoff.svg";
+                if (root.statusText === "disconnected")
+                    return "../icons/btsearching.svg";
+                return "../icons/bton.svg";
+            }
             icon.color: root.currentColor
             icon.width: 16
             icon.height: 16
@@ -50,7 +64,11 @@ Item {
             padding: 0
             background: Item {}
 
-            Behavior on icon.color { ColorAnimation { duration: root.isFocused ? 50 : Style.animSpeed } }
+            Behavior on icon.color {
+                ColorAnimation {
+                    duration: root.isFocused ? 50 : Style.animSpeed
+                }
+            }
         }
 
         Item {
@@ -60,16 +78,26 @@ Item {
             clip: true
             anchors.verticalCenter: parent.verticalCenter
 
-            Behavior on width { 
+            Behavior on width {
                 SequentialAnimation {
-                    PauseAnimation { duration: root.isFocused ? 0 : Style.animSpeed }
-                    NumberAnimation { duration: root.isFocused ? 50 : Style.animSpeed; easing.type: Style.animEasing } 
+                    PauseAnimation {
+                        duration: root.isFocused ? 0 : Style.animSpeed
+                    }
+                    NumberAnimation {
+                        duration: root.isFocused ? 50 : Style.animSpeed
+                        easing.type: Style.animEasing
+                    }
                 }
             }
-            Behavior on opacity { 
+            Behavior on opacity {
                 SequentialAnimation {
-                    PauseAnimation { duration: root.isFocused ? 0 : Style.animSpeed }
-                    NumberAnimation { duration: root.isFocused ? 50 : Style.animSpeed; easing.type: Style.animEasing } 
+                    PauseAnimation {
+                        duration: root.isFocused ? 0 : Style.animSpeed
+                    }
+                    NumberAnimation {
+                        duration: root.isFocused ? 50 : Style.animSpeed
+                        easing.type: Style.animEasing
+                    }
                 }
             }
 

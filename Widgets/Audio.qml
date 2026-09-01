@@ -24,6 +24,7 @@ Item {
     }
 
     property bool isMuted: root.sinkNode && root.sinkNode.audio && root.sinkNode.audio.muted
+    property bool isSilent: root.sinkNode && root.sinkNode.audio && root.sinkNode.audio.volume == 0
     property color currentColor: root.isFocused ? Style.focusFg : (isMuted ? Style.accentRed : Style.textMain)
     property string volumeText: {
         if (!root.sinkNode || !root.sinkNode.audio)
@@ -38,7 +39,7 @@ Item {
         spacing: 6
 
         Button {
-            icon.source: root.isMuted ? "../icons/volume-x.svg" : "../icons/volume.svg"
+            icon.source: root.isMuted ? "../icons/volume-off.svg" : root.isSilent ? "../icons/volume-x.svg" : "../icons/volume.svg"
             icon.color: root.currentColor
             icon.width: 16
             icon.height: 16

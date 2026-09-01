@@ -27,16 +27,10 @@ Item {
     property color currentColor: root.isFocused ? Style.focusFg : Style.textMain
 
     property string iconSource: {
-        if (!batDevice || !batDevice.ready)
-            return "../icons/battery.svg";
+        if (!batDevice || !batDevice.ready || batDevice.iconName === "")
+        return "../icons/battery-missing-symbolic.svg";
 
-        let stateStr = batDevice.state.toString();
-
-        if (stateStr === "1") // "Charging"
-            return "../icons/battery-charging.svg";
-        if (stateStr === "5") // "FullyCharged"
-            return "../icons/plug-zap.svg";
-        return "../icons/battery.svg";
+        return "../icons/" + batDevice.iconName + ".svg";
     }
 
     Row {

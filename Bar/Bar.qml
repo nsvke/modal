@@ -35,7 +35,8 @@ PanelWindow {
         btWidget,
         netWidget,
         audioWidget,
-        batWidget
+        batWidget,
+        trayWidget
     ]
 
     onFocusedIndexChanged: {
@@ -52,13 +53,47 @@ PanelWindow {
 
         Keys.onPressed: event => {
             if (event.key === Qt.Key_H || event.key === Qt.Key_Left) {
-                if (root.focusedIndex > 0) root.focusedIndex--;
-                else if (root.focusedIndex === -1) root.focusedIndex = focusableWidgets.length - 1;
+                if (root.focusedIndex !== -1 && focusableWidgets[root.focusedIndex] === trayWidget) {
+                    if (trayWidget.handleKey(event)) {
+                        event.accepted = true;
+                        return;
+                    }
+                }
+                if (root.focusedIndex > 0) {
+                    root.focusedIndex--;
+                    if (focusableWidgets[root.focusedIndex] === trayWidget) {
+                        if (trayWidget.hasItems) trayWidget.focusLast();
+                        else if (root.focusedIndex > 0) root.focusedIndex--;
+                    }
+                } else if (root.focusedIndex === -1) {
+                    root.focusedIndex = focusableWidgets.length - 1;
+                    if (focusableWidgets[root.focusedIndex] === trayWidget) {
+                        if (trayWidget.hasItems) trayWidget.focusLast();
+                        else if (root.focusedIndex > 0) root.focusedIndex--;
+                    }
+                }
                 event.accepted = true;
             }
             else if (event.key === Qt.Key_L || event.key === Qt.Key_Right) {
-                if (root.focusedIndex < focusableWidgets.length - 1) root.focusedIndex++;
-                else if (root.focusedIndex === -1) root.focusedIndex = 0;
+                if (root.focusedIndex !== -1 && focusableWidgets[root.focusedIndex] === trayWidget) {
+                    if (trayWidget.handleKey(event)) {
+                        event.accepted = true;
+                        return;
+                    }
+                }
+                if (root.focusedIndex < focusableWidgets.length - 1) {
+                    root.focusedIndex++;
+                    if (focusableWidgets[root.focusedIndex] === trayWidget) {
+                        if (trayWidget.hasItems) trayWidget.focusFirst();
+                        else if (root.focusedIndex < focusableWidgets.length - 1) root.focusedIndex++;
+                    }
+                } else if (root.focusedIndex === -1) {
+                    root.focusedIndex = 0;
+                    if (focusableWidgets[root.focusedIndex] === trayWidget) {
+                        if (trayWidget.hasItems) trayWidget.focusFirst();
+                        else if (root.focusedIndex < focusableWidgets.length - 1) root.focusedIndex++;
+                    }
+                }
                 event.accepted = true;
             }
             else if (event.key === Qt.Key_T) {
@@ -208,6 +243,8 @@ PanelWindow {
                     isFocused: batWidget.isFocused
                     Widgets.Battery { id: batWidget }
                 }
+
+                Widgets.Tray { id: trayWidget; parentWindow: root }
             }
         }
     }

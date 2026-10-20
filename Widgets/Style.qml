@@ -21,4 +21,6 @@ QtObject {
 
     readonly property color barBg: "#0d1016"
     readonly property double barOpac: 0.9
+
+    readonly property color chargingBg: "#1aff11"
 }

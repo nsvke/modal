@@ -53,6 +53,11 @@ ShellRoot {
     BarModule.Bar {
         id: bar
         barFocused: false
+        onIsChargingChanged: {
+            if (bar.isCharging) {
+                root.welcome()
+            }
+        }
     }
 
     PDModule.PowerDialog {
@@ -76,11 +81,15 @@ ShellRoot {
         }
     }
 
-    Component.onCompleted: {
+    function welcome() {
         bar.barFocused = true;
         // pd.visible = true;
         // es.visible = true;
 
         welcomeTimer.start();
+    }
+    
+    Component.onCompleted: {
+        welcome();
     }
 }

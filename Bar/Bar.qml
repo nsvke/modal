@@ -39,6 +39,8 @@ PanelWindow {
         trayWidget
     ]
 
+    readonly property alias isCharging: batWidget.isCharging
+
     onFocusedIndexChanged: {
         for (let i = 0; i < focusableWidgets.length; i++) {
             if (focusableWidgets[i]) {
@@ -147,13 +149,13 @@ PanelWindow {
             width: parent.width * 0.15 
             height: 2
             radius: 1
-            color: Widgets.Style.focusBg
+            color: root.isCharging ? Widgets.Style.chargingBg : Widgets.Style.focusBg
             opacity: root.barFocused ? 1.0 : 0.0
 
             gradient: Gradient {
                 orientation: Gradient.Horizontal
                 GradientStop { position: 0.0; color: "transparent" }
-                GradientStop { position: 0.5; color: Widgets.Style.focusBg }
+                GradientStop { position: 0.5; color: root.isCharging ? Widgets.Style.chargingBg : Widgets.Style.focusBg }
                 GradientStop { position: 1.0; color: "transparent" }
             }
 

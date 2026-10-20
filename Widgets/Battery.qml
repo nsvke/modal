@@ -33,6 +33,8 @@ Item {
         return "../icons/" + batDevice.iconName + ".svg";
     }
 
+    property bool isCharging: batDevice.state === UPowerDeviceState.Charging; 
+
     Row {
         id: layout
         spacing: 6

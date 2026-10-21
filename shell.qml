@@ -6,6 +6,7 @@ import "Bar" as BarModule
 import "PowerDialog" as PDModule
 import "./Widgets/Style.qml" as Style
 import "EyeShield" as ESModule
+import "FupIndicator" as FIModule
 
 ShellRoot {
     id: root
@@ -48,6 +49,13 @@ ShellRoot {
         function toggleEyeShield() {
             bar.toggleEyeShild();
         }
+
+        function fupStart() {
+            fi.fupStart();
+        }
+        function fupStop() {
+            fi.fupStop();
+        }
     }
 
     BarModule.Bar {
@@ -55,7 +63,7 @@ ShellRoot {
         barFocused: false
         onIsChargingChanged: {
             if (bar.isCharging) {
-                root.welcome()
+                root.welcome();
             }
         }
     }
@@ -67,6 +75,10 @@ ShellRoot {
     ESModule.EyeShield {
         id: es
         healthyEyes: bar.healthyEyes
+    }
+
+    FIModule.FupIndicator {
+        id: fi
     }
 
     Timer {
@@ -88,7 +100,7 @@ ShellRoot {
 
         welcomeTimer.start();
     }
-    
+
     Component.onCompleted: {
         welcome();
     }

@@ -30,7 +30,7 @@ PanelWindow {
     visible: false
 
     onVisibleChanged: {
-        if (visible) {
+        if (root.visible) {
             pulseAnim.stop();
             shieldCircle.scale = 0;
             startAnim.restart();

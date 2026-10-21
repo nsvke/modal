@@ -7,6 +7,7 @@ import "PowerDialog" as PDModule
 import "./Widgets/Style.qml" as Style
 import "EyeShield" as ESModule
 import "FupIndicator" as FIModule
+import "BatteryCritical" as BCModule
 
 ShellRoot {
     id: root
@@ -79,6 +80,10 @@ ShellRoot {
 
     FIModule.FupIndicator {
         id: fi
+    }
+
+    BCModule.BatteryCritical {
+        id: bc
     }
 
     Timer {
